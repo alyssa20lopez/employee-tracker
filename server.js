@@ -7,6 +7,7 @@ const app = express();
 // Express Middleware
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+app.use(express.static('public'));
 
 // Connect to DB
 const db = mysql.createConnection(
@@ -14,11 +15,19 @@ const db = mysql.createConnection(
     host: 'localhost',
     user: 'root',
     password: '',
-    user: 'root',
-    database: 'company_db',
+    database: 'company_db'
   },
   console.log(`Connect to company_db database.`)
 );
+
+app.get('/', (req, res) => {
+  // Query database
+  db.query('SELECT * FROM department', function (err, results) {
+    if (err) return console.log (err);
+    console.log(results);
+    res.json(results);
+  });
+});
 
 // Default response for any other request (Not Found)
 app.use((req, res) => {
