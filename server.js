@@ -29,17 +29,67 @@ const landing = () => {
       'Add Role',
       'View All Departments',
       'Add Department',
-      'Quit'
+      'Leave'
     ]
   }).then((response) => {
     switch (response.landing) {
       case 'View All Employees':
         viewAllEmployees();
         break;
+
+      case 'Add Employee':
+        addEmployee();
+        break;
+
+      case 'Update Employee Role':
+        updateEmployee();
+        break;
+
+      case 'View All Roles':
+        viewAllRoles();
+        break;
+
+      case 'Add Role':
+        addRole();
+        break;
+
+      case 'View All Departments':
+        viewAllDepartments();
+        break;
+
+      case 'Add Department':
+        addDepartment();
+        break;
+
+      case 'Leave':
+        connection.end();
+        break;
     }
   });
 };
 
+const viewAllEmployees = () => {
+  db.query('SELECT * FROM employee', (err, employee) => {
+    if (err) throw err;
+    console.table(employee);
+    init();
+  });
+
+};
+const viewAllRoles = () => {
+  db.query('SELECT * FROM role', (err, role) => {
+    if (err) throw err;
+    console.table(role);
+    init();
+  });
+};
+const viewAllDepartments = () => {
+  db.query('SELECT * FROM department', (err, department) => {
+    if (err) throw err;
+    console.table(department);
+    init();
+  });
+};
 
 
 
