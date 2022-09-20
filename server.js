@@ -1,13 +1,8 @@
-const express = require('express');
+const inquirer = require('inquirer');
 const mysql = require('mysql2');
 
 const PORT = process.env.PORT || 3001;
 const app = express();
-
-// Express Middleware
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
-app.use(express.static('public'));
 
 // Connect to DB
 const db = mysql.createConnection(
@@ -20,21 +15,40 @@ const db = mysql.createConnection(
   console.log(`Connect to employees database.`)
 );
 
-app.get('/', (req, res) => {
   // Query database
   db.query('SELECT * FROM department', function (err, results) {
     if (err) return console.log (err);
     console.table(results);
     res.json(results);
   });
-});
-
-// Default response for any other request (Not Found)
-app.use((req, res) => {
-  res.status(404).end();
-});
 
 // Questions
+const prompt = inquirer.createPromptModule();
+
+const showLastname = () => {
+  db.query('SELECT last_name FROM employee', (err) => {
+    if (err) throw err;
+    console.table(employee);
+    init();
+  });
+};
+
+const addEmployee = () => {
+  prompt({
+    name: 'last_name',
+    type: 'input',
+    message: "What is the employee's lastname?",
+  })
+  .then((input) => {
+    db.query('INSERT INTO employee SET ?', input, (err) => {
+      if (err) throw err;
+      console.log(`Saved ${input.last_name}`);
+      init();  
+    })
+  });
+};
+
+
 
 
 app.listen(PORT, () => {
