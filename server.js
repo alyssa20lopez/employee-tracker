@@ -1,8 +1,6 @@
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
-
-const PORT = process.env.PORT || 3001;
-const app = express();
+const consoleTable = require('console.table');
 
 // Connect to DB
 const db = mysql.createConnection(
@@ -15,17 +13,63 @@ const db = mysql.createConnection(
   console.log(`Connect to employees database.`)
 );
 
-  // Query database
-  db.query('SELECT * FROM department', function (err, results) {
-    if (err) return console.log (err);
-    console.table(results);
-    res.json(results);
-  });
-
 // Questions
 const prompt = inquirer.createPromptModule();
 
-const showLastname = () => {
+const landing = () => {
+  prompt({
+    name: 'choice',
+    type: 'list',
+    message: 'What would you like to do?',
+    choices: [
+      'View All Employees',
+      'Add Employee',
+      'Update Employee Role',
+      'View All Roles',
+      'Add Role',
+      'View All Departments',
+      'Add Department',
+      'Quit'
+    ]
+  }).then((response) => {
+    switch (response.landing) {
+      case 'View All Employees':
+        viewAllEmployees();
+        break;
+    }
+  });
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+db.query('SELECT * FROM department', (err, department) => {
+  if (err) throw err;
+  console.table(department);
+  init();
+});
+
+// Add Choices
+
+const addLastname = () => {
   db.query('SELECT last_name FROM employee', (err) => {
     if (err) throw err;
     console.table(employee);
@@ -33,24 +77,17 @@ const showLastname = () => {
   });
 };
 
-const addEmployee = () => {
+const addLastname = () => {
   prompt({
     name: 'last_name',
     type: 'input',
     message: "What is the employee's lastname?",
   })
-  .then((input) => {
-    db.query('INSERT INTO employee SET ?', input, (err) => {
-      if (err) throw err;
-      console.log(`Saved ${input.last_name}`);
-      init();  
-    })
-  });
+    .then((input) => {
+      db.query('INSERT INTO employee SET ?', input, (err) => {
+        if (err) throw err;
+        console.log(`Saved ${input.last_name}`);
+        init();
+      })
+    });
 };
-
-
-
-
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
