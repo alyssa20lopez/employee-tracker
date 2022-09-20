@@ -16,7 +16,7 @@ const db = mysql.createConnection(
 // Questions
 const prompt = inquirer.createPromptModule();
 
-const landing = () => {
+const init = () => {
   prompt({
     name: 'choice',
     type: 'list',
@@ -32,7 +32,7 @@ const landing = () => {
       'Leave'
     ]
   }).then((response) => {
-    switch (response.landing) {
+    switch (response.init) {
       case 'View All Employees':
         viewAllEmployees();
         break;
@@ -68,6 +68,8 @@ const landing = () => {
   });
 };
 
+init();
+
 const viewAllEmployees = () => {
   db.query('SELECT * FROM employee', (err, employee) => {
     if (err) throw err;
@@ -92,30 +94,59 @@ const viewAllDepartments = () => {
 };
 
 const addEmployee = () => {
-  prompt({
-    name: 'last_name',
-    type: 'input',
-    message: "What is the employee's lastname?",
-  })
+  prompt([
+    {
+      name: 'first_name',
+      type: 'input',
+      message: "What is the employee's first name?"
+    },
+    {
+      name: 'last_name',
+      type: 'input',
+      message: "What is the employee's last name?"
+    },
+    {
+      name: 'role_id',
+      type: 'input',
+      message: "What is the employee's role ID?"
+    },
+    {
+      name: 'manager_id',
+      type: 'input',
+      message: "If applicable, enter employee's manager ID."
+    },
+  ])
   .then((input) => {
-    db.query('INSERT INTO employee SET ?', input, (err) => {
+    db.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES`, input, (err) => {
       if (err) throw err;
-      console.log(`Saved ${input.last_name}`);
+      console.log(`Saved ${input.first_name}, ${input.last_name}, ${input.role_id}, ${input.manager_id}`);
       init();
     });
   });
 };
 
 const addRole = () => {
-  prompt({
-    name: 'title',
-    type: 'input',
-    message: "What is the employee's role?",
-  })
+  prompt([
+    {
+      name: 'title',
+      type: 'input',
+      message: "What is the employee's title?"
+    },
+    {
+      name: 'salary',
+      type: 'input',
+      message: "What is the employee's salary?"
+    },
+    {
+      name: 'department_id',
+      type: 'input',
+      message: "What is the employee's department ID?"
+    }
+  ])
   .then((input) => {
-    db.query('INSERT INTO role SET ?', input, (err) => {
+    db.query(`INSERT INTO role (title, salary, deparment_id) VALUES`, input, (err) => {
       if (err) throw err;
-      console.log(`Saved ${input.title}`);
+      console.log(`Saved ${(`${input.title}, ${input.salary}, ${input.department_id}`)}`);
       init();
     });
   });
@@ -131,6 +162,33 @@ const addDepartment = () => {
     db.query('INSERT INTO department SET ?', input, (err) => {
       if (err) throw err;
       console.log(`Saved ${input.name}`);
+      init();
+    });
+  });
+};
+
+const updateEmployee = () => {
+prompt([
+    {
+      name: 'title',
+      type: 'input',
+      message: "What is the employee's new title?"
+    },
+    {
+      name: 'salary',
+      type: 'input',
+      message: "What is the employee's new salary?"
+    },
+    {
+      name: 'department_id',
+      type: 'input',
+      message: "What is the employee's new department ID?"
+    }
+  ])
+  .then((input) => {
+    db.query(`INSERT INTO role (title, salary, deparment_id) VALUES`, input, (err) => {
+      if (err) throw err;
+      console.log(`Saved ${(`${input.title}, ${input.salary}, ${input.department_id}`)}`);
       init();
     });
   });
