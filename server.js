@@ -91,53 +91,47 @@ const viewAllDepartments = () => {
   });
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-db.query('SELECT * FROM department', (err, department) => {
-  if (err) throw err;
-  console.table(department);
-  init();
-});
-
-// Add Choices
-
-const addLastname = () => {
-  db.query('SELECT last_name FROM employee', (err) => {
-    if (err) throw err;
-    console.table(employee);
-    init();
-  });
-};
-
-const addLastname = () => {
+const addEmployee = () => {
   prompt({
     name: 'last_name',
     type: 'input',
     message: "What is the employee's lastname?",
   })
-    .then((input) => {
-      db.query('INSERT INTO employee SET ?', input, (err) => {
-        if (err) throw err;
-        console.log(`Saved ${input.last_name}`);
-        init();
-      })
+  .then((input) => {
+    db.query('INSERT INTO employee SET ?', input, (err) => {
+      if (err) throw err;
+      console.log(`Saved ${input.last_name}`);
+      init();
     });
+  });
+};
+
+const addRole = () => {
+  prompt({
+    name: 'title',
+    type: 'input',
+    message: "What is the employee's role?",
+  })
+  .then((input) => {
+    db.query('INSERT INTO role SET ?', input, (err) => {
+      if (err) throw err;
+      console.log(`Saved ${input.title}`);
+      init();
+    });
+  });
+};
+
+const addDepartment = () => {
+  prompt({
+    name: 'name',
+    type: 'input',
+    message: "What department does the employee belong to?",
+  })
+  .then((input) => {
+    db.query('INSERT INTO department SET ?', input, (err) => {
+      if (err) throw err;
+      console.log(`Saved ${input.name}`);
+      init();
+    });
+  });
 };
