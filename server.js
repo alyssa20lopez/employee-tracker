@@ -15,16 +15,16 @@ const db = mysql.createConnection(
     host: 'localhost',
     user: 'root',
     password: '',
-    database: 'company_db'
+    database: 'employees'
   },
-  console.log(`Connect to company_db database.`)
+  console.log(`Connect to employees database.`)
 );
 
 app.get('/', (req, res) => {
   // Query database
   db.query('SELECT * FROM department', function (err, results) {
     if (err) return console.log (err);
-    console.log(results);
+    console.table(results);
     res.json(results);
   });
 });
@@ -33,6 +33,9 @@ app.get('/', (req, res) => {
 app.use((req, res) => {
   res.status(404).end();
 });
+
+// Questions
+
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
