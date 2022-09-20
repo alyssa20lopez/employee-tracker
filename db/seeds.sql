@@ -2,7 +2,7 @@ USE employees;
 
 INSERT INTO department (name)
 VALUES
-    ('Customer Engineering'),
+    ('Development'),
     ('Management'),
     ('Human Resources'),
     ('Finance'),
@@ -19,7 +19,7 @@ VALUES
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
 VALUES
     ('Jane', 'Doe', 1, null),
-    ('Sarah', 'Love', 2, 3),
-    ('Aaron', 'Applewood', 3, 2),
+    ('Sarah', 'Love', 2, null),
+    ('Aaron', 'Applewood', 3, null),
     ('Richard', 'Stewart', 4, null),
     ('Salem', 'Price', 5, null);

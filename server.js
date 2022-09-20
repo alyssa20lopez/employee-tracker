@@ -31,44 +31,35 @@ const init = () => {
       'Add Department',
       'Leave'
     ]
-  }).then((response) => {
-    switch (response.init) {
+  }).then((answers) => {
+    switch (answers.choice) {
       case 'View All Employees':
-        viewAllEmployees();
-        break;
+        return viewAllEmployees();
 
       case 'Add Employee':
-        addEmployee();
-        break;
+        return addEmployee();
 
       case 'Update Employee Role':
-        updateEmployee();
-        break;
+        return updateEmployee();
 
       case 'View All Roles':
-        viewAllRoles();
-        break;
+        return viewAllRoles();
 
       case 'Add Role':
-        addRole();
-        break;
+        return addRole();
 
       case 'View All Departments':
-        viewAllDepartments();
-        break;
+        return viewAllDepartments();
 
       case 'Add Department':
-        addDepartment();
-        break;
+        return addDepartment();
 
       case 'Leave':
-        connection.end();
-        break;
+        return process.exit();
     }
   });
 };
 
-init();
 
 const viewAllEmployees = () => {
   db.query('SELECT * FROM employee', (err, employee) => {
@@ -116,13 +107,13 @@ const addEmployee = () => {
       message: "If applicable, enter employee's manager ID."
     },
   ])
-  .then((input) => {
-    db.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES`, input, (err) => {
-      if (err) throw err;
-      console.log(`Saved ${input.first_name}, ${input.last_name}, ${input.role_id}, ${input.manager_id}`);
-      init();
+    .then((input) => {
+      db.query(`INSERT INTO employee SET ?`, input, (err) => {
+        if (err) throw err;
+        console.log(`Added ${input.first_name} ${input.last_name} to the employee database!`);
+        init();
+      });
     });
-  });
 };
 
 const addRole = () => {
@@ -143,53 +134,58 @@ const addRole = () => {
       message: "What is the employee's department ID?"
     }
   ])
-  .then((input) => {
-    db.query(`INSERT INTO role (title, salary, deparment_id) VALUES`, input, (err) => {
-      if (err) throw err;
-      console.log(`Saved ${(`${input.title}, ${input.salary}, ${input.department_id}`)}`);
-      init();
+    .then((input) => {
+      db.query('INSERT INTO role SET ?', input, (err) => {
+        if (err) throw err;
+        console.log(`Added ${input.title} to the employee database!`);
+        init();
+      });
     });
-  });
 };
 
 const addDepartment = () => {
-  prompt({
-    name: 'name',
-    type: 'input',
-    message: "What department does the employee belong to?",
-  })
-  .then((input) => {
-    db.query('INSERT INTO department SET ?', input, (err) => {
-      if (err) throw err;
-      console.log(`Saved ${input.name}`);
-      init();
+  prompt([
+    {
+      name: 'name',
+      type: 'input',
+      message: "What is the name of the new department?",
+    }
+  ])
+    .then((input) => {
+      db.query('INSERT INTO department SET ?', input, (err) => {
+        if (err) throw err;
+        console.log(`Added ${input.name} to the employee database!`);
+        init();
+      });
     });
+};
+
+
+const updateEmployee = () => {
+  db.query('SELECT first_name, last_name, id FROM employee', (err, input) => {
+
+    let viewEmployees = input.map(employee => ({ name: employee.first_name + " " + employee.last_name, value: employee.id }))
+
+    prompt([
+      {
+        name: 'employee',
+        type: 'list',
+        message: "What employee would you like to update?",
+        choices: viewEmployees
+      },
+      {
+        name: 'title',
+        type: 'input',
+        message: "What is the employee's new role?",
+      }
+    ])
+      .then((input) => {
+        db.query(`UPDATE employee SET role_id = ${input.title} WHERE id = ${input.employee}`, (err, input) => {
+          console.log(`Updated employee in database!`);
+          init();
+        });
+      });
   });
 };
 
-const updateEmployee = () => {
-prompt([
-    {
-      name: 'title',
-      type: 'input',
-      message: "What is the employee's new title?"
-    },
-    {
-      name: 'salary',
-      type: 'input',
-      message: "What is the employee's new salary?"
-    },
-    {
-      name: 'department_id',
-      type: 'input',
-      message: "What is the employee's new department ID?"
-    }
-  ])
-  .then((input) => {
-    db.query(`INSERT INTO role (title, salary, deparment_id) VALUES`, input, (err) => {
-      if (err) throw err;
-      console.log(`Saved ${(`${input.title}, ${input.salary}, ${input.department_id}`)}`);
-      init();
-    });
-  });
-};
+init();
