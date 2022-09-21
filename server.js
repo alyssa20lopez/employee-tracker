@@ -62,7 +62,7 @@ const init = () => {
 
 
 const viewAllEmployees = () => {
-  db.query('SELECT * FROM employee', (err, employee) => {
+  db.query('SELECT * FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON role.department_id = department.id', (err, employee) => {
     if (err) throw err;
     console.table(employee);
     init();
@@ -166,25 +166,31 @@ const updateEmployee = () => {
 
     let viewEmployees = input.map(employee => ({ name: employee.first_name + " " + employee.last_name, value: employee.id }))
 
-    prompt([
-      {
-        name: 'employee',
-        type: 'list',
-        message: "What employee would you like to update?",
-        choices: viewEmployees
-      },
-      {
-        name: 'title',
-        type: 'input',
-        message: "What is the employee's new role?",
-      }
-    ])
-      .then((input) => {
-        db.query(`UPDATE employee SET role_id = ${input.title} WHERE id = ${input.employee}`, (err, input) => {
-          console.log(`Updated employee in database!`);
-          init();
+    db.query('SELECT * FROM role', (err, input) => {
+
+      let viewRoles = input.map(role => ({ name: role.title, value: role.id }))
+
+      prompt([
+        {
+          name: 'employee',
+          type: 'list',
+          message: "What employee would you like to update?",
+          choices: viewEmployees
+        },
+        {
+          name: 'title',
+          type: 'list',
+          message: "What is the employee's new role?",
+          choices: viewRoles
+        }
+      ])
+        .then((input) => {
+          db.query(`UPDATE employee SET role_id = ${input.title} WHERE id = ${input.employee}`, (err, input) => {
+            console.log(`Updated employee in the database!`);
+            init();
+          });
         });
-      });
+    });
   });
 };
 
