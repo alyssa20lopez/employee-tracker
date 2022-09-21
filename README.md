@@ -13,7 +13,7 @@ This is a command-line application that will manage a company's employee databas
 [GitHub Repository](https://github.com/alyssa20lopez/employee-tracker)
 
 ## Usage
-To use this application, first clone the project and navigate to VS Code. In the command-line install the following packages:
+To use this application, first clone the project and navigate to VS Code. In the command-line, install the following packages:
 - npm i inquirer@8.2.4
 - npm i console.table
 - npm i express
