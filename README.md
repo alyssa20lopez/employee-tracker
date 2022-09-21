@@ -12,7 +12,9 @@ This is a command-line application that will manage a company's employee databas
 [Link to Repo](https://github.com/alyssa20lopez/employee-tracker)
 
 ## Visuals
-Here is a link to the walkthrough video for command-line application. Enjoy!
+Here is a visual and link to the walkthrough video for the command-line application.
+
+![Alt text](./assets/employee-tracker.png)
 
 <!-- Link to Walkthrough Video -->
-[Video Walkthrough](https://drive.google.com/file/d/1whpD1uELmWJDCkq6gGeHp-A1Es7FMYbk/view) git 
+[Click Here to Access Walkthrough Video!](https://drive.google.com/file/d/1zwZPsPfbgun1f5yWXtOh9yfL065dR5R9/view)
